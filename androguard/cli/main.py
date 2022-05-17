@@ -417,7 +417,7 @@ def androlyze_main(session, filename):
 def androsign_main(args_apk, args_hash, args_all, show):
     from androguard.core.bytecodes.apk import APK
     from androguard.util import get_certificate_name_string
-
+    from oscrypto import asymmetric
     import hashlib
     import binascii
     import traceback
@@ -476,12 +476,12 @@ def androsign_main(args_apk, args_hash, args_all, show):
 
             for public_key in pkeys:
                 if show:
-                    x509_public_key = keys.PublicKeyInfo.load(public_key)
+                    x509_public_key = asymmetric.load_public_key(public_key)
                     print("PublicKey Algorithm:", x509_public_key.algorithm)
                     print("Bit Size:", x509_public_key.bit_size)
                     print("Fingerprint:", binascii.hexlify(x509_public_key.fingerprint))
                     try:
-                        print("Hash Algorithm:", x509_public_key.hash_algo)
+                        print("Hash Algorithm:", x509_cert.hash_algo)
                     except ValueError as ve:
                         # RSA pkey does not have an hash algorithm
                         pass
